@@ -1,12 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
 import reportWebVitals from './reportWebVitals';
+import {Navigation} from './Navigation'
+import {App} from './App'
+
+
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* <App/> */}
+    <div>
+      <Navigation tabs={{
+        Cuba: <div>pocasie Pre kubu</div>, 
+        Hispagnola: <App></App>,
+        Santo: <h1>Mulat je kulat</h1>
+      }}/>
+    </div>
   </React.StrictMode>,
   document.getElementById('root')
 );
