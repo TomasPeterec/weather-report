@@ -27,15 +27,51 @@ const openWeatherMap = (lat, lon) =>
     )
     .catch((e) => Promise.reject(e.message))
 
-  export class App extends React.Component {
-    constructor(...args) {
-      super(...args)
-      this.state = {
-        locationLabel: 'Bratislava',
-      }
+// Tu je to nahardkodene, ale kludne by sa to dalo generovat.
+const FAKE_DATA = [
+  {
+    timestamp: Date.now() + 0 * 60 * 60 * 1000,
+    temperature: 282.58,
+    weatherDescription: 'zamracene',
+    icon: '10d',
+  },
+  {
+    timestamp: Date.now() + 1 * 60 * 60 * 1000,
+    temperature: 283.45,
+    weatherDescription: 'zamracene',
+    icon: '10d',
+  },
+  {
+    timestamp: Date.now() + 2 * 60 * 60 * 1000,
+    temperature: 281.77,
+    weatherDescription: 'zamracene',
+    icon: '10d',
+  },
+]
+
+// Toto nacita data okamzite, lebo to vrati resolvnuty promis
+const immediateFakeAPI = (lat, lon) =>
+  Promise.resolve(FAKE_DATA)
+
+// Toto nacita data o pol sekundy
+const delayedFakeAPI = (lat, lon) =>
+  // Prvy parameter funkcie setTimeout je callback (funkcia resolve),
+  // druhy je cas v milisekundach kolko ma cakat kym zavola ten callback
+  // a zvysne argumenty budu pouzite ako argumenty ked setTimeout zavola ten callback,
+  // cize co sa udeje, je ze setTimeout pocka 500ms a zavola resolve(FAKE_DATA),
+  // a tym sa resolvne ten promis, ktory sme vratili.
+  new Promise(resolve => setTimeout(resolve, 500, FAKE_DATA))
+
+export class App extends React.Component {
+  constructor(...args) {
+    super(...args)
+    this.state = {
+      locationLabel: 'Bratislava',
     }
+  }
 
   fetchData({lat, lon}) {
+    // Tu len vymen openWeatherMap za immediateFakeAPI alebo delayedFakeAPI a malo by to fungovat s FAKE_DATA
     openWeatherMap(lat, lon)
       .then((result) => this.setState({data: result}))
       .catch((error) => this.setState({error: error}))
