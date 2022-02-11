@@ -3,6 +3,7 @@ import LocationSelector from "./LocationSelector";
 import {Navigation} from './Navigation'
 import {AppUnderMenu} from './AppUnderMenu'
 import axios from "axios"
+import Chart from "./Chart";
 
 const LOCATIONS = {
   'Bratislava': {lat: 48.14, lon: 17.10},
@@ -11,17 +12,34 @@ const LOCATIONS = {
 }
 
 const OPEN_WEATHER_APP_ID = '7dab2adde313375d154eeebd3426fed6'
+/*
+clouds: 20
+dew_point: 273.43
+dt: 1644012000
+feels_like: 273.36
+humidity: 85
+pop: 0
+pressure: 1014
+temp: 275.69
+uvi: 0
+visibility: 10000
+weather: [{…}]
+wind_deg: 215
+wind_gust: 4.21
+wind_speed: 2.27
+*/
 
 const openWeatherMap = (lat, lon) =>
   axios.get(`https://api.openweathermap.org/data/2.5/onecall?appid=${OPEN_WEATHER_APP_ID}&lon=${lon}&lat=${lat}`)  
     .then(
       (response) =>
-        response.data.hourly.map((item) =>
-        ({
+        response.data.hourly.map((item) => ({
           timestamp: item.dt * 1000,
           temperature: item.temp,
           weatherDescription: item.weather[0].description,
           icon: item.weather[0].icon,
+          humidity: item.humidity,
+          feelsLike: item.feels_like,
         })
       )
     )
@@ -32,7 +50,6 @@ export class BigSelector extends React.Component {
     super(...args)
       this.state = {
         locationLabel: 'Bratislava',
-        child01: React.createRef(),
     }
   }
 
@@ -58,16 +75,14 @@ export class BigSelector extends React.Component {
               this.fetchData(LOCATIONS[selectedLabel])
             }}
           />
-        <Navigation tabs={{
-          Cuba: <div>pocasie Pre kubu</div>, 
-          Hispagnola: 
-            <AppUnderMenu 
-              ref={this.state.child01} 
+        <Navigation initialTab="Chart" tabs={{
+          Chart: this.state.data && <Chart hours={this.state.data}/>, 
+          List: 
+            <AppUnderMenu
               selectedCity={this.state.locationLabel} 
               listOfCitys={LOCATIONS} 
               dataToAppearing={this.state.data}
             ></AppUnderMenu>,
-          Santo: <h1>Mulat je kulat</h1>
         }}/>  
       </>
     )

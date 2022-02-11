@@ -5,7 +5,7 @@ export class Navigation extends React.Component {
   constructor(...args) {
     super(...args)
     this.state = {
-      activeTab: 'Cuba',
+      activeTab: this.props.initialTab,
     }
   }
 
