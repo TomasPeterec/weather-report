@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
 import {BigSelector} from './BigSelector'
+import Autocomplete from './Autocomplete'
 
 
 
@@ -10,9 +11,10 @@ import {BigSelector} from './BigSelector'
 ReactDOM.render(
   <React.StrictMode>
     {/* <App/> */}
-    <div>
-      <BigSelector/>
-    </div>
+   
+    {/* <BigSelector/> */}
+    <Autocomplete/>
+   
   </React.StrictMode>,
   document.getElementById('root')
 );
