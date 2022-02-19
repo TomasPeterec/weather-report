@@ -1,32 +1,55 @@
 import React, {useState} from "react";
 
-const apiAsync = (q) => 
-  new Promise(
-    (resolve, reject) =>
-      setTimeout(resolve, 5000, [`Foo ${q}`, `Gzz ${q}`, `Mim ${q}`, `Gloo ${q}`])
-  )
 
 
 
-export default () => {
+
+export default ({onChange, getOptions}) => {
   const [pending, setPending] = useState()
   const [results, setResults] = useState()
+  const [value, setValue] = useState('')
+  const [errorMesage, setErrorMesage] = useState()
 
   return (
     <div>
-      <input onChange={e => {
-        setLastQuery(e.target.value)
+      <input value={value} onChange={e => {
         setPending(true)
-        apiAsync(e.target.value).then(res => {
-          
-          setResults(res)
-        })
+        setValue(e.target.value)
+        setErrorMesage()
+        // Immediately Invoked Function Expression [IIFE]
+        ;((query) => {
+          getOptions(e.target.value)
+            .then(res => {
+            // console.log(query, e.target.value)
+              if(query === e.target.value) {
+                setResults(res)
+                setPending()
+              }
+            })
+            .catch(err => {
+              setErrorMesage(err)
+              setPending()
+            })
+        })(e.target.value)
+       
       }} />
-      
       {pending && <div>Pending</div>}
+      {errorMesage && 
+        <div style={{color: 'red'}}>
+          Error: {errorMesage}
+        </div>}
       {results && 
         <ul>
-          {results.map(result => <li>{result}</li>)}
+          {results.map(result => 
+            <li key={result} 
+              onClick={() => {
+                setValue(result)
+                setResults()
+                onChange(result)
+              }}
+            >
+              {result}
+            </li>)}
         </ul>
       }
     </div>

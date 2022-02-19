@@ -6,6 +6,13 @@ import {BigSelector} from './BigSelector'
 import Autocomplete from './Autocomplete'
 
 
+const fakeSearch = (q) => 
+  new Promise(
+    (resolve, reject) =>
+      q === 'klakni' 
+        ? setTimeout(reject, 1000, 'To cumis co?')
+        : setTimeout(resolve, 1000, [`Foo ${q}`, `Gzz ${q}`, `Mim ${q}`, `Gloo ${q}`])
+  )
 
 
 ReactDOM.render(
@@ -13,7 +20,11 @@ ReactDOM.render(
     {/* <App/> */}
    
     {/* <BigSelector/> */}
-    <Autocomplete/>
+    <Autocomplete 
+      getOptions={fakeSearch}
+     // getOptions={q => Promise.reject('klaklo ti to')}
+      onChange={(selectedValue) => console.log('autocomplete selected:', selectedValue)}
+    />
    
   </React.StrictMode>,
   document.getElementById('root')
